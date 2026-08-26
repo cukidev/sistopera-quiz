@@ -58,17 +58,6 @@ errores. Si encuentras alguno, los *issues* y *pull requests* son bienvenidos.
 - El botón "Repetir las falladas" arma una ronda nueva solo con los errores de
   esa sesión.
 
-## Verificación de las respuestas
-
-Las **197 respuestas están contrastadas una por una contra las que vienen
-marcadas en negrita en la Sistopera**, que son las de la pauta oficial.
-
-**Las 197 verificadas y coincidentes.** (La PEP 2 #42 no traía negrita en el
-documento y fue confirmada aparte: es la b.)
-
-Las justificaciones sí son mías. En los casos donde mi razonamiento no cuadraba
-del todo con la pauta, la respuesta marcada como correcta es **siempre la de la
-pauta**, y la objeción queda anotada con ⚠ dentro de la explicación. Esas son:
 
 | Pregunta | Tema | Qué anotar |
 |---|---|---|
@@ -79,9 +68,6 @@ pauta**, y la objeción queda anotada con ⚠ dentro de la explicación. Esas so
 | PEP 3 #9 | RAID 0, 56 KB | Depende de si la escritura arranca al inicio del strip o no |
 | PEP 3 #58 | Particionamiento fijo | El caso normal de este esquema es fragmentación interna, no externa |
 
-También hay dos erratas del documento original, señaladas dentro de las
-justificaciones: PEP 2 #12 tiene alternativas duplicadas literalmente, y en
-PEP 2 la numeración salta (la #48 aparece rotulada como #68).
 
 ## Archivos
 
