@@ -73,7 +73,7 @@ window.PEP1 = [
 
 {
   id: "p1-5", pep: 1, num: 5, puntos: 1, tema: "Hebras (pthreads)",
-  contexto: "Para el siguiente código (compilado y ejecutado sin errores).",
+  contexto: "Código con dos hebras: f1 imprime \"$\" y f2 imprime \"@\", mientras main imprime \"=\" y \"#\" entre los pthread_join. Compilado y ejecutado sin errores.",
   enunciado: "¿Cuál de las siguientes alternativas podría mostrarse por la salida estándar?",
   codigo: `#include <stdio.h>
 #include <pthread.h>
@@ -464,7 +464,7 @@ i=2:   P0   P1               →  2 "primer a 1"
 
 {
   id: "p1-23", pep: 1, num: 23, puntos: 1, tema: "Imagen del proceso",
-  contexto: "Considere nuevamente el siguiente código.",
+  contexto: "Analice el siguiente fragmento, que hace fork dentro de un ciclo for.",
   enunciado: "Con respecto a la imagen de los procesos creados en el código se puede afirmar que:",
   codigo: `int main() {
   int a = 0;
@@ -620,7 +620,7 @@ TAT(P2) = 3 = (1+1) + 1`,
 
 {
   id: "p1-31", pep: 1, num: 31, puntos: 1, tema: "Planificación (prioridad aleatoria)",
-  contexto: "Un planificador selecciona al siguiente proceso según su atributo priority, una lista de N enteros entre 0 y 99. El planificador genera un número P aleatorio entre 0 y 99 y selecciona al proceso que contenga P en su priority. Si más de uno lo contiene, elige al que más tiempo ha esperado. Una vez seleccionado, el proceso corre hasta agotar su quantum, bloquearse por I/O o ceder el procesador.",
+  contexto: "En un SO se implementa un planificador que selecciona al siguiente proceso a ejecutarse según su prioridad. Los procesos definen un atributo priority como una lista de N números enteros entre 0 y 99 (por ejemplo, priority = [0, 15, 80]). El planificador genera un número P aleatorio entre 0 y 99 y lo compara con el priority de los procesos: el proceso que contenga P en su priority es seleccionado. Si más de un proceso contiene a P, se selecciona al que más tiempo ha estado esperando entre ellos. Una vez seleccionado, el proceso corre hasta agotar su quantum de tiempo, se bloquea por I/O o desaloja voluntariamente el procesador.",
   enunciado: "Si los procesos contienen sólo un número en priority y ninguno se repite entre procesos, el planificador se comporta como:",
   opciones: [
     "FCFS",
@@ -635,7 +635,7 @@ TAT(P2) = 3 = (1+1) + 1`,
 
 {
   id: "p1-32", pep: 1, num: 32, puntos: 1, tema: "Planificación (prioridad aleatoria)",
-  contexto: "Mismo planificador (sortea P entre 0 y 99; desempata por mayor tiempo de espera; el proceso corre hasta agotar su quantum).",
+  contexto: "En un SO se implementa un planificador que selecciona al siguiente proceso a ejecutarse según su prioridad. Los procesos definen un atributo priority como una lista de N números enteros entre 0 y 99 (por ejemplo, priority = [0, 15, 80]). El planificador genera un número P aleatorio entre 0 y 99 y lo compara con el priority de los procesos: el proceso que contenga P en su priority es seleccionado. Si más de un proceso contiene a P, se selecciona al que más tiempo ha estado esperando entre ellos. Una vez seleccionado, el proceso corre hasta agotar su quantum de tiempo, se bloquea por I/O o desaloja voluntariamente el procesador.",
   enunciado: "Si los procesos contienen todos los números posibles en priority, el planificador se comporta como:",
   opciones: [
     "FCFS",
@@ -650,7 +650,7 @@ TAT(P2) = 3 = (1+1) + 1`,
 
 {
   id: "p1-33", pep: 1, num: 33, puntos: 1, tema: "Planificación (prioridad aleatoria)",
-  contexto: "Mismo planificador.",
+  contexto: "En un SO se implementa un planificador que selecciona al siguiente proceso a ejecutarse según su prioridad. Los procesos definen un atributo priority como una lista de N números enteros entre 0 y 99 (por ejemplo, priority = [0, 15, 80]). El planificador genera un número P aleatorio entre 0 y 99 y lo compara con el priority de los procesos: el proceso que contenga P en su priority es seleccionado. Si más de un proceso contiene a P, se selecciona al que más tiempo ha estado esperando entre ellos. Una vez seleccionado, el proceso corre hasta agotar su quantum de tiempo, se bloquea por I/O o desaloja voluntariamente el procesador.",
   enunciado: "Si un grupo de procesos contiene el 50% + 1 de los números en priority, el planificador da prioridad a:",
   opciones: [
     "El grupo de procesos con más números en priority, con un generador que sigue una distribución normal.",
@@ -714,7 +714,7 @@ quantum = 100 · HZ / 1000
 
 {
   id: "p1-37", pep: 1, num: 37, puntos: 1, tema: "Imagen del proceso / stack",
-  contexto: "Analice el estado del sistema para el siguiente código.",
+  contexto: "Analice el estado del sistema para el siguiente código. Note que la función sub está definida pero nunca es invocada.",
   enunciado: "Mientras la ejecución reside en la línea 1, el segmento user stack contendrá los marcos con parámetros de:",
   codigo: `int add (int x, int y){ return x + y; }
 int sub (int x, int y){ return add (x, -y); }
@@ -742,7 +742,7 @@ int main(int argc, char const *argv[]) {
 
 {
   id: "p1-38", pep: 1, num: 38, puntos: 1, tema: "Imagen del proceso / heap",
-  contexto: "Considere nuevamente el siguiente código.",
+  contexto: "Analice el estado del sistema para el siguiente código. Note que la función sub está definida pero nunca es invocada.",
   enunciado: "Situando el flujo en la línea 5, respecto al segmento heap es posible concluir que:",
   codigo: `int add (int x, int y){ return x + y; }
 int sub (int x, int y){ return add (x, -y); }
@@ -763,7 +763,7 @@ int main(int argc, char const *argv[]) {
 
 {
   id: "p1-39", pep: 1, num: 39, puntos: 2, tema: "Imagen del proceso / kernel stack",
-  contexto: "Considere nuevamente el siguiente código.",
+  contexto: "Analice el estado del sistema para el siguiente código. Note que la función sub está definida pero nunca es invocada.",
   enunciado: "Si se modifica el retorno de sub por return x - y;, tras recompilar y ejecutar, el kernel stack:",
   codigo: `int add (int x, int y){ return x + y; }
 int sub (int x, int y){ return add (x, -y); }
@@ -973,7 +973,7 @@ y dentro de cada proceso el orden 0→9 se respeta.`,
 
 {
   id: "p1-50", pep: 1, num: 50, puntos: 1, tema: "fork / salida de código",
-  contexto: "Analice el siguiente fragmento.",
+  contexto: "Analice el siguiente fragmento: tras el fork, el hijo imprime \"x\", el padre imprime \"y\", y ambos imprimen \"z\" antes de terminar.",
   enunciado: "¿Qué cadena de caracteres representa un resultado factible en la consola?",
   codigo: `main(){
   pid_t pid = fork();
@@ -1005,7 +1005,7 @@ zxyz  ✗   (empieza con z, sin letra previa)`,
 
 {
   id: "p1-51", pep: 1, num: 51, puntos: 1, tema: "Syscalls",
-  contexto: "Considere nuevamente el siguiente código.",
+  contexto: "Analice el siguiente fragmento: tras el fork, el hijo imprime \"x\", el padre imprime \"y\", y ambos imprimen \"z\" antes de terminar.",
   enunciado: "Indique el número de llamadas al sistema ejecutadas desde el inicio de la instrucción de clonación:",
   codigo: `main(){
   pid_t pid = fork();
@@ -1199,7 +1199,7 @@ E   kernel(Q) → usuario(Q)`,
 
 {
   id: "p1-60", pep: 1, num: 60, puntos: 1, tema: "Syscalls",
-  contexto: "Estudie el siguiente código, considerando que se ejecuta sin errores..",
+  contexto: "Estudie el siguiente código, que se ejecuta sin errores. El padre hace un segundo fork y sale del ciclo con break; solo el hijo del primer fork sigue iterando.",
   enunciado: "Para k = 1 ¿cuántos syscalls fueron ejecutados partiendo desde la instrucción de fork?",
   codigo: `int main(int argc, char const *argv[]) {
   int i = 0;
@@ -1238,7 +1238,7 @@ H2:  getpid + printf + exit                            = 3
 
 {
   id: "p1-61", pep: 1, num: 61, puntos: 2, tema: "fork / conteo de procesos",
-  contexto: "Considere nuevamente el siguiente código.",
+  contexto: "Estudie el siguiente código, que se ejecuta sin errores. El padre hace un segundo fork y sale del ciclo con break; solo el hijo del primer fork sigue iterando.",
   enunciado: "Para k = 3 ¿cuántos procesos crea el código?",
   codigo: `while (i < k) {
   pid1 = fork();
@@ -1267,7 +1267,7 @@ Procesos: P0, H1, H1b, H2, H2b, H3, H3b  =  7`,
 
 {
   id: "p1-62", pep: 1, num: 62, puntos: 2, tema: "fork / conteo de procesos",
-  contexto: "Considere nuevamente el siguiente código.",
+  contexto: "Estudie el siguiente código, que se ejecuta sin errores. El padre hace un segundo fork y sale del ciclo con break; solo el hijo del primer fork sigue iterando.",
   enunciado: "Para k = N ¿cuántos procesos crea el código?",
   codigo: `int main(int argc, char const *argv[]) {
   int i = 0;

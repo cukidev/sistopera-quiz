@@ -36,7 +36,7 @@ H1: entra a la SC  ← ¡las dos adentro!`,
 
 {
   id: "p2-2", pep: 2, num: 2, puntos: 1, tema: "Busy waiting",
-  contexto: "Considere el siguiente código (el while que gira esperando el flag).",
+  contexto: "El siguiente código implementa un semáforo binario. Note que en lock() la comprobación del flag y su escritura son dos operaciones separadas, no atómicas.",
   enunciado: "El código anterior utiliza la técnica vista en clases conocida como busy-waiting. El problema con esta técnica es:",
   codigo: `typedef struct __lock_t { int flag; } lock_t;
 
@@ -216,7 +216,7 @@ reo(tid) {
 
 {
   id: "p2-8", pep: 2, num: 8, puntos: 1, tema: "Inanición",
-  contexto: "Considere el siguiente pseudocódigo de los reos.",
+  contexto: "Cien reos, cada uno en su celda, y una sala con una ampolleta inicialmente apagada. Cada día el guardia elige aleatoriamente a un reo y lo lleva a la sala. Estrategia acordada: un único líder cuenta cuántas veces encuentra la ampolleta prendida y al salir la apaga; los demás la prenden la primera vez que la encuentran apagada y nunca más la tocan.",
   enunciado: "¿Cuál de los siguientes problemas se puede apreciar en el código?",
   codigo: `lámpara l = OFF;
 
@@ -450,7 +450,7 @@ para incrementarlo.  ⇒ DEADLOCK`,
 
 {
   id: "p2-18", pep: 2, num: 18, puntos: 1, tema: "Inanición",
-  contexto: "Mismo ticket lock, con dos hebras ejecutando trabajador.",
+  contexto: "Implementación de un ticket lock con la instrucción atómica fetch_and_add, que devuelve el valor antiguo e incrementa. Dos hebras ejecutan la función trabajador; boleto y turno son globales.",
   enunciado: "¿Esta solución es libre de inanición?",
   codigo: `int fetch_and_add(int *ptr) {
   int old = *ptr;
@@ -524,7 +524,7 @@ La secuencia respeta el protocolo en todo momento.`,
 
 {
   id: "p2-20", pep: 2, num: 20, puntos: 2, tema: "Sección crítica",
-  contexto: "Considere el siguiente código del túnel.",
+  contexto: "Por un túnel de una sola vía sólo pueden pasar autos en una dirección a la vez. El primer auto de una dirección toma el túnel y el último lo libera. Existen contadorDirA y contadorDirB en cero, y los semáforos binarios semDirA, semDirB y semTunel en uno.",
   enunciado: "En el código se puede identificar la siguiente SC:",
   codigo: `void *autoDirA(void *data){
   semWait(&semDirA);
@@ -661,7 +661,7 @@ void *cliente(void *data){
 
 {
   id: "p2-25", pep: 2, num: 25, puntos: 2, tema: "Semáforos (peluquería)",
-  contexto: "Considere el siguiente código de la peluquería.",
+  contexto: "Peluquería con un peluquero, una silla de peluquería y N sillas de espera. Si no hay clientes, el peluquero duerme. Si un cliente llega y el peluquero trabaja, se sienta si hay sillas; si no, se va y vuelve después.",
   enunciado: "¿Cuál de las siguientes afirmaciones es incorrecta?",
   codigo: `semaphore peluqueroListo = 0;
 semaphore salaDeEspera   = 1;
@@ -789,7 +789,7 @@ exitSC: key = 0  →  H2 puede entrar`,
 
 {
   id: "p2-30", pep: 2, num: 30, puntos: 2, tema: "Deadlock",
-  contexto: "Considere el siguiente código de compare-and-swap.",
+  contexto: "Se implementa compare-and-swap por hardware. N hebras ejecutan function() y las variables key, X e Y son globales.",
   enunciado: "¿Para qué valores de key, X e Y la solución provoca deadlock?",
   codigo: `int compare_and_swap(int *ptr, int expected, int new) {
   int actual = *ptr;
@@ -872,7 +872,7 @@ mago:      if (0.30 <= 0.3) exit(0)
 
 {
   id: "p2-32", pep: 2, num: 32, puntos: 1, tema: "Inanición",
-  contexto: "Considere el siguiente código del mago y los aprendices.",
+  contexto: "Un mago quiere una poción con exactamente K% de esencia de magia y (100−K)% de agua. Dos aprendices vierten ingredientes sin parar, a la espera de que el mago los detenga. El mago solo comprueba la proporción. Los ingredientes son infinitos.",
   enunciado: "¿Es posible inanición?",
   codigo: `// agua y esencia_de_magia globales, inicializadas en uno.
 // mutex global, ya inicializado. 3 hebras.
@@ -907,7 +907,7 @@ void* comprobar_proporcion(void* p){
 
 {
   id: "p2-33", pep: 2, num: 33, puntos: 1, tema: "Deadlock",
-  contexto: "Considere el siguiente código del mago y los aprendices.",
+  contexto: "Un mago quiere una poción con exactamente K% de esencia de magia y (100−K)% de agua. Dos aprendices vierten ingredientes sin parar, a la espera de que el mago los detenga. El mago solo comprueba la proporción. Los ingredientes son infinitos.",
   enunciado: "¿Es posible deadlock?",
   codigo: `// agua y esencia_de_magia globales, inicializadas en uno.
 // mutex global, ya inicializado. 3 hebras.
@@ -995,7 +995,7 @@ El "cederle el turno al otro" es lo que evita el empate.`,
 
 {
   id: "p2-36", pep: 2, num: 36, puntos: 1, tema: "Inanición",
-  contexto: "Mismo algoritmo de Peterson.",
+  contexto: "Implementación del algoritmo de Peterson con el tipo mutex_t. Dos hebras ejecutan worker, una con t = 0 y la otra con t = 1.",
   enunciado: "¿Es posible inanición?",
   codigo: `typedef struct _mutex_t{
   int flag[2];
@@ -1103,7 +1103,7 @@ no es atómica, y por eso la SC #1 queda expuesta.`,
 
 {
   id: "p2-40", pep: 2, num: 40, puntos: 1, tema: "Atomicidad",
-  contexto: "Considere nuevamente el siguiente código.",
+  contexto: "Dos hebras ejecutan increment_counter sin errores. Línea 10: while(!is_safe). Línea 11: is_safe = false. Línea 12: counter++. Línea 13: is_safe = true.",
   enunciado: "¿Bajo qué condiciones se cumpliría el requerimiento de EM para la variable counter?",
   codigo: `#define ITERATIONS 100000
 long counter = 0;
@@ -1164,7 +1164,7 @@ Si ambas hacen LL a la vez:
 
 {
   id: "p2-42", pep: 2, num: 42, puntos: 1, tema: "Busy waiting / inanición",
-  contexto: "Misma solución con LL y SCond.",
+  contexto: "Un sistema provee Load-Linked (LL) y Store-Conditional (SCond). Al invocar LL se \"reserva\" la dirección de memoria; si otra hebra invoca LL sobre la misma, la reserva se invalida y SCond retorna cero. flag es una variable global con valor inicial cero.",
   enunciado: "De la solución anterior se puede afirmar lo siguiente:",
   codigo: `int LL(int *ptr) { return *ptr; }
 
@@ -1217,7 +1217,7 @@ int sillasLibres = N;
 
 {
   id: "p2-44", pep: 2, num: 44, puntos: 2, tema: "Semáforos (peluquería)",
-  contexto: "Considere el siguiente código de la peluquería.",
+  contexto: "Peluquería con un peluquero, una silla de peluquería y N sillas de espera. Los clientes que no encuentran silla se van y vuelven después.",
   enunciado: "¿Cuál de las siguientes afirmaciones es incorrecta?",
   codigo: `semaphore peluqueroListo = 0;
 semaphore salaDeEspera   = 1;
@@ -1290,7 +1290,7 @@ H2 despierta: while(1 <= 0)? NO → pasa, s=0  ENTRA ✓`,
 
 {
   id: "p2-47", pep: 2, num: 47, puntos: 1, tema: "Monitores",
-  contexto: "Mismo monitor (bloquea mientras s <= t).",
+  contexto: "Implementación en pseudocódigo (C++ style) de un semáforo usando monitores. El constructor recibe dos parámetros: value y limit. N hebras ejecutan worker, que hace sem_wait(), la SC y sem_signal().",
   enunciado: "¿Cuál de las siguientes afirmaciones es correcta para los valores de value = 3 y limit = 2?",
   codigo: `Monitor sem {
   int s, t;

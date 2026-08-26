@@ -1184,7 +1184,7 @@ Segmentos       = 2²  = 4`,
 
 {
   id: "p3-57", pep: 3, num: 57, puntos: 1, tema: "Fragmentación",
-  contexto: "Mismo sistema.",
+  contexto: "En un sistema de administración de memoria, las direcciones virtuales siguen el formato indicado (2 bits de segmento, 16 bits de número de página y 8 bits de offset).",
   enunciado: "Si disminuimos el tamaño de página ¿qué efecto tendrá sobre la fragmentación?",
   tabla: {"head":["N° de segmento","N° de página","offset"],"rows":[["2 bits","16 bits","8 bits"]]},
   opciones: [
