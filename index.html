@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistopera Quiz — Sistemas Operativos</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ PANTALLA DE INICIO ============ -->
+<div id="pantalla-inicio" class="pantalla">
+  <header class="hero">
+    <h1>Sistopera<span class="acento">Quiz</span></h1>
+    <p class="sub">Todas las preguntas de las PEPs, con justificación de por qué la respuesta es correcta.</p>
+  </header>
+
+  <section class="card">
+    <h2>¿Qué quieres practicar?</h2>
+    <div id="selector-peps" class="grid-peps"></div>
+  </section>
+
+  <section class="card">
+    <h2>Opciones</h2>
+    <div class="opciones-config">
+      <label class="switch-row">
+        <input type="checkbox" id="cfg-aleatorio" checked>
+        <span>Orden aleatorio de preguntas</span>
+      </label>
+      <label class="switch-row">
+        <input type="checkbox" id="cfg-baraja-alt">
+        <span>Barajar también las alternativas</span>
+      </label>
+      <label class="switch-row">
+        <input type="checkbox" id="cfg-feedback" checked>
+        <span>Mostrar la justificación al responder</span>
+      </label>
+      <label class="switch-row">
+        <input type="checkbox" id="cfg-solo-falladas">
+        <span>Solo preguntas que he fallado antes</span>
+      </label>
+      <div class="switch-row">
+        <label for="cfg-limite">Cantidad de preguntas:</label>
+        <select id="cfg-limite">
+          <option value="0">Todas</option>
+          <option value="10">10</option>
+          <option value="20" selected>20</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+        </select>
+      </div>
+    </div>
+    <button id="btn-empezar" class="btn btn-primario btn-grande">Empezar</button>
+  </section>
+
+  <section class="card" id="card-stats">
+    <h2>Tu progreso</h2>
+    <div id="stats-globales"></div>
+    <button id="btn-reset-stats" class="btn btn-fantasma">Borrar estadísticas</button>
+  </section>
+
+  <footer class="pie">
+    Hecho a partir de <em>Sistopera.docx</em> · Las justificaciones son una ayuda de estudio, no la pauta oficial.
+  </footer>
+</div>
+
+<!-- ============ PANTALLA DE QUIZ ============ -->
+<div id="pantalla-quiz" class="pantalla oculto">
+  <div class="barra-superior">
+    <button id="btn-salir" class="btn btn-fantasma btn-chico">← Salir</button>
+    <div class="progreso-wrap">
+      <div class="progreso-barra"><div id="progreso-fill"></div></div>
+      <span id="progreso-txt">1 / 20</span>
+    </div>
+    <div class="marcador">
+      <span class="ok" id="marcador-ok">0</span> /
+      <span class="mal" id="marcador-mal">0</span>
+    </div>
+  </div>
+
+  <main id="contenedor-pregunta"></main>
+
+  <div class="barra-inferior">
+    <button id="btn-repasar" class="btn btn-fantasma">☆ Marcar para repasar</button>
+    <button id="btn-siguiente" class="btn btn-primario" disabled>Siguiente →</button>
+  </div>
+</div>
+
+<!-- ============ PANTALLA DE RESULTADOS ============ -->
+<div id="pantalla-resultado" class="pantalla oculto">
+  <div class="card resultado-card">
+    <h1 id="res-titulo">¡Listo!</h1>
+    <div id="res-nota" class="nota-grande"></div>
+    <p id="res-detalle" class="sub"></p>
+    <div id="res-por-tema"></div>
+    <div class="botonera">
+      <button id="btn-revisar" class="btn btn-secundario">Revisar respuestas</button>
+      <button id="btn-repetir-malas" class="btn btn-secundario">Repetir las falladas</button>
+      <button id="btn-volver-inicio" class="btn btn-primario">Volver al inicio</button>
+    </div>
+  </div>
+  <div id="res-revision" class="oculto"></div>
+</div>
+
+<script src="data/pep1.js"></script>
+<script src="data/pep2.js"></script>
+<script src="data/pep3.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

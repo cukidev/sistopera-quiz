@@ -1,0 +1,18 @@
+# Sistema
+.DS_Store
+Thumbs.db
+*~
+
+# Editores
+.vscode/
+.idea/
+*.swp
+
+# Herramientas
+.claude/
+node_modules/
+
+# Material fuente (no publicar: son los PDFs y pautas del ramo)
+*.docx
+*.pdf
+*.xlsx
