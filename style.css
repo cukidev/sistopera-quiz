@@ -219,6 +219,19 @@ table.tabla-datos th { background: var(--bg-card-2); color: var(--txt-tenue); fo
 #stats-globales .stat-fila b { font-variant-numeric: tabular-nums; }
 
 .pie { text-align: center; color: var(--txt-tenue); font-size: .82rem; margin-top: 30px; }
+.pie p { margin: 0 0 10px; }
+.link-repo {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--txt-tenue); text-decoration: none;
+  font-size: .8rem; opacity: .65;
+  padding: 5px 12px; border-radius: 99px;
+  border: 1px solid transparent;
+  transition: opacity .15s, color .15s, border-color .15s;
+}
+.link-repo:hover {
+  opacity: 1; color: var(--acento); border-color: var(--borde);
+}
+.link-repo svg { flex-shrink: 0; }
 
 /* ---------- Marcadas para repasar ---------- */
 .contador-chip { color: var(--txt-tenue); font-variant-numeric: tabular-nums; }
