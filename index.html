@@ -39,6 +39,10 @@
         <input type="checkbox" id="cfg-solo-falladas">
         <span>Solo preguntas que he fallado antes</span>
       </label>
+      <label class="switch-row">
+        <input type="checkbox" id="cfg-solo-marcadas">
+        <span>Solo las marcadas para repasar <span id="conteo-marcadas" class="contador-chip"></span></span>
+      </label>
       <div class="switch-row">
         <label for="cfg-limite">Cantidad de preguntas:</label>
         <select id="cfg-limite">
@@ -56,7 +60,10 @@
   <section class="card" id="card-stats">
     <h2>Tu progreso</h2>
     <div id="stats-globales"></div>
-    <button id="btn-reset-stats" class="btn btn-fantasma">Borrar estadísticas</button>
+    <div class="botonera-stats">
+      <button id="btn-reset-stats" class="btn btn-fantasma">Borrar estadísticas</button>
+      <button id="btn-limpiar-marcadas" class="btn btn-fantasma">Quitar todas las marcas</button>
+    </div>
   </section>
 
   <section class="card card-aviso">
@@ -117,10 +124,12 @@
     <h1 id="res-titulo">¡Listo!</h1>
     <div id="res-nota" class="nota-grande"></div>
     <p id="res-detalle" class="sub"></p>
+    <p id="res-aviso-marcadas" class="aviso-marcadas"></p>
     <div id="res-por-tema"></div>
     <div class="botonera">
       <button id="btn-revisar" class="btn btn-secundario">Revisar respuestas</button>
       <button id="btn-repetir-malas" class="btn btn-secundario">Repetir las falladas</button>
+      <button id="btn-repasar-marcadas" class="btn btn-secundario">★ Repasar las marcadas</button>
       <button id="btn-volver-inicio" class="btn btn-primario">Volver al inicio</button>
     </div>
   </div>

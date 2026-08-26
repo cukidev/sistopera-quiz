@@ -220,6 +220,17 @@ table.tabla-datos th { background: var(--bg-card-2); color: var(--txt-tenue); fo
 
 .pie { text-align: center; color: var(--txt-tenue); font-size: .82rem; margin-top: 30px; }
 
+/* ---------- Marcadas para repasar ---------- */
+.contador-chip { color: var(--txt-tenue); font-variant-numeric: tabular-nums; }
+.contador-chip.activo { color: var(--amarillo); font-weight: 700; }
+.switch-row input[type=checkbox]:disabled { opacity: .35; cursor: not-allowed; }
+.switch-row:has(input:disabled) { opacity: .5; cursor: not-allowed; }
+.botonera-stats { display: flex; gap: 10px; flex-wrap: wrap; }
+.aviso-marcadas {
+  color: var(--amarillo); font-size: .9rem; margin: 10px 0 0;
+}
+.aviso-marcadas:empty { display: none; }
+
 /* ---------- Aviso / disclaimer ---------- */
 .card-aviso {
   border-color: rgba(255, 204, 87, .32);

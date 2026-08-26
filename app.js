@@ -17,10 +17,13 @@ const INFO_PEPS = {
 
 const LETRAS = ['a', 'b', 'c', 'd', 'e', 'f'];
 const CLAVE_STATS = 'sistopera_stats_v1';
+const CLAVE_MARCADAS = 'sistopera_marcadas_v1';
 
 /* ---------- Estado ---------- */
-let cfg = { peps: new Set([1]), aleatorio: true, barajarAlt: false, feedback: true, soloFalladas: false, limite: 20 };
-let sesion = null;   // { preguntas:[], idx, respuestas:[], marcadas:Set }
+let cfg = { peps: new Set([1]), aleatorio: true, barajarAlt: false, feedback: true,
+            soloFalladas: false, soloMarcadas: false, limite: 20 };
+let sesion = null;   // { preguntas:[], idx, respuestas:[] }
+let marcadas = new Set();   // ids marcados para repasar (persiste en localStorage)
 
 /* ---------- Utilidades ---------- */
 const $ = sel => document.querySelector(sel);
@@ -77,6 +80,28 @@ function registrar(id, acierto) {
   guardarStats(s);
 }
 
+/* ---------- Marcadas para repasar (persistentes) ---------- */
+function cargarMarcadas() {
+  try { return new Set(JSON.parse(localStorage.getItem(CLAVE_MARCADAS)) || []); }
+  catch (e) { return new Set(); }
+}
+function guardarMarcadas() {
+  try { localStorage.setItem(CLAVE_MARCADAS, JSON.stringify([...marcadas])); } catch (e) {}
+}
+function alternarMarca(id) {
+  marcadas.has(id) ? marcadas.delete(id) : marcadas.add(id);
+  guardarMarcadas();
+  return marcadas.has(id);
+}
+function pintarConteoMarcadas() {
+  const chip = $('#conteo-marcadas');
+  const n = marcadas.size;
+  chip.textContent = n ? `(${n})` : '';
+  chip.className = 'contador-chip' + (n ? ' activo' : '');
+  $('#cfg-solo-marcadas').disabled = n === 0;
+  $('#btn-limpiar-marcadas').style.display = n ? '' : 'none';
+}
+
 /* ---------- Pantalla de inicio ---------- */
 function pintarSelectorPeps() {
   const cont = $('#selector-peps');
@@ -122,6 +147,7 @@ function leerConfig() {
   cfg.barajarAlt   = $('#cfg-baraja-alt').checked;
   cfg.feedback     = $('#cfg-feedback').checked;
   cfg.soloFalladas = $('#cfg-solo-falladas').checked;
+  cfg.soloMarcadas = $('#cfg-solo-marcadas').checked;
   cfg.limite       = parseInt($('#cfg-limite').value, 10);
 }
 
@@ -134,6 +160,14 @@ function empezar(listaForzada) {
     pool = listaForzada;
   } else {
     pool = BANCO.filter(q => cfg.peps.has(q.pep));
+    if (cfg.soloMarcadas) {
+      const filtradas = pool.filter(q => marcadas.has(q.id));
+      if (filtradas.length === 0) {
+        alert('No tienes preguntas marcadas en esa selección de PEPs.');
+        return;
+      }
+      pool = filtradas;
+    }
     if (cfg.soloFalladas) {
       const s = cargarStats();
       const filtradas = pool.filter(q => s[q.id] && s[q.id].mal > 0);
@@ -153,7 +187,6 @@ function empezar(listaForzada) {
     preguntas: pool,
     idx: 0,
     respuestas: new Array(pool.length).fill(null),
-    marcadas: new Set(),
     ordenAlt: pool.map(q => {
       const idxs = q.opciones.map((_, i) => i);
       return cfg.barajarAlt ? barajar(idxs) : idxs;
@@ -207,9 +240,7 @@ function pintarPregunta() {
   window.scrollTo({ top: 0, behavior: 'instant' });
 
   // Botón de repaso
-  const btnRep = $('#btn-repasar');
-  btnRep.classList.toggle('marcada', sesion.marcadas.has(q.id));
-  btnRep.textContent = sesion.marcadas.has(q.id) ? '★ Marcada' : '☆ Marcar para repasar';
+  pintarBotonRepaso(q.id);
 
   // Botón siguiente
   $('#btn-siguiente').disabled = !yaRespondida;
@@ -259,6 +290,16 @@ function mostrarCorreccion(iElegida) {
       ${q.descarte ? `<p><span class="clave">Por qué caen las otras:</span> ${fmt(q.descarte)}</p>` : ''}
       ${q.diagrama ? `<pre>${escapar(q.diagrama)}</pre>` : ''}
     </div>`;
+}
+
+function pintarBotonRepaso(id) {
+  const btn = $('#btn-repasar');
+  const esta = marcadas.has(id);
+  btn.classList.toggle('marcada', esta);
+  btn.textContent = esta ? '★ Marcada — la repasarás después' : '☆ Marcar para repasar';
+  btn.title = esta
+    ? 'Quítale la marca si ya la dominas'
+    : 'Se guarda aunque salgas: podrás filtrar solo las marcadas desde el inicio';
 }
 
 function siguiente() {
@@ -313,6 +354,17 @@ function terminar() {
 
   const hayMalas = preguntas.some((q, i) => respuestas[i] !== null && respuestas[i] !== q.correcta);
   $('#btn-repetir-malas').style.display = hayMalas ? '' : 'none';
+
+  // Aviso de cuántas dejaste marcadas en esta ronda
+  const marcadasRonda = preguntas.filter(q => marcadas.has(q.id)).length;
+  $('#btn-repasar-marcadas').style.display = marcadas.size ? '' : 'none';
+  $('#btn-repasar-marcadas').textContent = `★ Repasar las marcadas (${marcadas.size})`;
+  const aviso = $('#res-aviso-marcadas');
+  if (aviso) {
+    aviso.innerHTML = marcadasRonda
+      ? `Marcaste <b>${marcadasRonda}</b> pregunta${marcadasRonda > 1 ? 's' : ''} de esta ronda para repasar.`
+      : '';
+  }
 }
 
 function pintarRevision() {
@@ -322,7 +374,7 @@ function pintarRevision() {
     const r = respuestas[i];
     const acierto = r === q.correcta;
     return `<div class="revision-item ${acierto ? 'ok' : ''}">
-        <div class="rev-num">PEP ${q.pep} · #${escapar(q.num)} · ${escapar(q.tema)}</div>
+        <div class="rev-num">PEP ${q.pep} · #${escapar(q.num)} · ${escapar(q.tema)}${marcadas.has(q.id) ? ' · <span style="color:var(--amarillo)">★ marcada</span>' : ''}</div>
         <div class="rev-enun">${fmt(q.enunciado)}</div>
         ${q.codigo ? renderCodigo(q.codigo) : ''}
         <div class="rev-linea"><span class="lbl">Tu respuesta:</span>
@@ -340,6 +392,7 @@ function volverInicio() {
   $('#pantalla-resultado').classList.add('oculto');
   $('#pantalla-inicio').classList.remove('oculto');
   pintarStats();
+  pintarConteoMarcadas();
   window.scrollTo({ top: 0 });
 }
 
@@ -354,11 +407,18 @@ $('#btn-repetir-malas').onclick = () => {
   empezar(malas);
 };
 $('#btn-repasar').onclick = () => {
-  const id = sesion.preguntas[sesion.idx].id;
-  sesion.marcadas.has(id) ? sesion.marcadas.delete(id) : sesion.marcadas.add(id);
-  const btn = $('#btn-repasar');
-  btn.classList.toggle('marcada', sesion.marcadas.has(id));
-  btn.textContent = sesion.marcadas.has(id) ? '★ Marcada' : '☆ Marcar para repasar';
+  alternarMarca(sesion.preguntas[sesion.idx].id);
+  pintarBotonRepaso(sesion.preguntas[sesion.idx].id);
+};
+$('#btn-repasar-marcadas').onclick = () => {
+  const lista = BANCO.filter(q => marcadas.has(q.id));
+  if (lista.length === 0) { alert('No tienes preguntas marcadas.'); return; }
+  empezar(cfg.aleatorio ? barajar(lista) : lista);
+};
+$('#btn-limpiar-marcadas').onclick = () => {
+  if (confirm(`¿Quitar las marcas de ${marcadas.size} pregunta(s)?`)) {
+    marcadas.clear(); guardarMarcadas(); pintarConteoMarcadas();
+  }
 };
 $('#btn-reset-stats').onclick = () => {
   if (confirm('¿Borrar todas tus estadísticas?')) { localStorage.removeItem(CLAVE_STATS); pintarStats(); }
@@ -376,6 +436,14 @@ document.addEventListener('keydown', e => {
   }
 });
 
+/* Atajo: tecla M para marcar/desmarcar la pregunta actual */
+document.addEventListener('keydown', e => {
+  if ($('#pantalla-quiz').classList.contains('oculto')) return;
+  if (e.key === 'm' || e.key === 'M') $('#btn-repasar').click();
+});
+
 /* ---------- Init ---------- */
+marcadas = cargarMarcadas();
 pintarSelectorPeps();
 pintarStats();
+pintarConteoMarcadas();
