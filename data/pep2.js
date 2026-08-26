@@ -336,14 +336,22 @@ void* worker(void *param) {
   contexto: "Comparando la implementación POSIX (sem_wait / sem_post) con el semáforo contador estudiado en clases.",
   enunciado: "El comportamiento del semáforo contador implementado difiere de lo estudiado en clases en lo siguiente:",
   opciones: [
-    "El valor negativo del semáforo estudiado en clases refleja el número de hebras esperando en el semáforo.",
+    "El valor negativo del semáforo estudiado en clases no refleja el número de hebras esperando en el semáforo.",
     "El valor positivo del semáforo estudiado en clases refleja el número de hebras esperando en el semáforo.",
-    "El valor negativo del semáforo estudiado en clases refleja el número de hebras bloqueadas (alternativa repetida en el enunciado original).",
-    "El valor positivo del semáforo estudiado en clases refleja el número de hebras bloqueadas (alternativa repetida en el enunciado original)."
+    "El valor negativo del semáforo estudiado en clases refleja el número de hebras esperando en el semáforo.",
+    "El valor positivo del semáforo estudiado en clases no refleja el número de hebras esperando en el semáforo."
   ],
   correcta: 2,
-  justificacion: "En el semáforo teórico de clases, `semWait` **siempre decrementa** el contador, incluso cuando ya está en cero. Por eso el valor puede volverse negativo, y su **magnitud indica exactamente cuántas hebras están bloqueadas** esperando en la cola: si vale −3, hay tres hebras esperando. La implementación POSIX en cambio nunca baja de cero, y ahí está la diferencia.",
-  descarte: "Un valor **positivo** significa lo contrario: cuántas hebras más pueden entrar sin bloquearse (unidades del recurso disponibles). ⚠ Ojo: en el documento original las alternativas a/c y b/d están **duplicadas literalmente** (error de tipeo de la Sistopera). Lo que importa es quedarse con \"valor negativo = hebras esperando\"."
+  justificacion: "Ojo con leer las cuatro alternativas completas, porque solo cambian en dos palabras: **negativo/positivo** y la presencia del **\"no\"**. En el semáforo teórico de clases, `semWait` **siempre decrementa** el contador, incluso cuando ya está en cero. Por eso el valor puede volverse negativo, y su **magnitud indica exactamente cuántas hebras están bloqueadas** esperando en la cola: si vale −3, hay tres hebras esperando. La implementación POSIX en cambio nunca baja de cero, y ahí está justamente la diferencia que pregunta el enunciado.",
+  diagrama: `Semáforo de CLASES (teórico):        POSIX (sem_t):
+
+  semWait: s--  siempre              sem_wait: si s>0, s--
+           si s<0 → bloquea                    si s==0 → bloquea
+                                               (nunca baja de 0)
+  s = -3  →  3 hebras esperando
+  s =  2  →  2 pueden entrar          sem_getvalue nunca es < 0
+             sin bloquearse`,
+  descarte: "La alternativa 1 niega justamente lo que sí ocurre. Las que hablan del valor **positivo** confunden los dos significados del contador: cuando es positivo indica cuántas hebras más **pueden entrar sin bloquearse** (unidades del recurso disponibles), no cuántas esperan — por eso la 2 es falsa. Y aunque la 4 es una afirmación cierta en sí misma, no responde la pregunta: el positivo tampoco refleja las hebras esperando en la implementación POSIX, así que **eso no es una diferencia** entre ambas."
 },
 
 {
