@@ -13,15 +13,32 @@ HTML, CSS y JavaScript puro. Sin frameworks, sin build, sin dependencias.
 **Local:** descarga el repositorio y haz doble clic en `index.html`. No necesita
 servidor, internet ni instalar nada.
 
-## Sobre el material
+## ⚠️ Aviso importante
 
-Las preguntas provienen de PEPs de semestres anteriores recopiladas por
-estudiantes, y las respuestas están contrastadas contra las pautas oficiales.
-Es material de estudio hecho por y para estudiantes del ramo: úsalo para
-practicar y entender, que es justamente de lo que se trata.
+**Este proyecto es una herramienta de estudio hecha por estudiantes, con fines
+exclusivamente educativos y sin fines de lucro.** No tiene relación oficial con
+la Universidad de Santiago de Chile, con el Departamento de Ingeniería
+Informática ni con el equipo docente del ramo, y no está avalado por ellos.
 
-Las justificaciones y los diagramas son elaboración propia y pueden contener
-errores. Si encuentras alguno, los *issues* y *pull requests* son bienvenidos.
+Las preguntas provienen de evaluaciones de semestres anteriores recopiladas
+entre compañeros. Las respuestas están contrastadas con las pautas disponibles,
+pero **pueden contener errores**: tanto en la alternativa marcada como correcta
+como en las justificaciones y diagramas, que son elaboración propia. Algunas
+preguntas admiten más de una lectura, y esos casos van señalados con ⚠ dentro
+de la explicación.
+
+Úsalo para practicar y entender los conceptos, **no como fuente única ni como
+reemplazo** de las clases, los apuntes y la bibliografía del curso. Si algo aquí
+contradice a tu profesor, hazle caso al profesor.
+
+El material se comparte de buena fe entre estudiantes, tal como se comparten
+apuntes y guías. Si eres parte del equipo docente y prefieres que algo se
+retire, abre un *issue* y se resuelve sin problema.
+
+Se ofrece **tal cual, sin garantía de ningún tipo**. Quien lo use asume la
+responsabilidad de verificar la información con las fuentes oficiales del curso.
+
+¿Encontraste un error? Los *issues* y *pull requests* son bienvenidos. 💛
 
 ## Qué trae
 

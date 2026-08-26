@@ -220,6 +220,27 @@ table.tabla-datos th { background: var(--bg-card-2); color: var(--txt-tenue); fo
 
 .pie { text-align: center; color: var(--txt-tenue); font-size: .82rem; margin-top: 30px; }
 
+/* ---------- Aviso / disclaimer ---------- */
+.card-aviso {
+  border-color: rgba(255, 204, 87, .32);
+  background: linear-gradient(180deg, rgba(255, 204, 87, .05), transparent 55%), var(--bg-card);
+}
+.card-aviso h2 { color: var(--amarillo); }
+.card-aviso p {
+  color: var(--txt-tenue);
+  font-size: .88rem;
+  line-height: 1.65;
+  margin: 0 0 12px;
+}
+.card-aviso p:last-child { margin-bottom: 0; }
+.card-aviso strong { color: var(--txt); font-weight: 600; }
+.card-aviso .aviso-cierre {
+  border-top: 1px dashed var(--borde);
+  padding-top: 12px;
+  margin-top: 14px;
+  color: var(--txt);
+}
+
 @media (max-width: 600px) {
   .hero h1 { font-size: 2rem; }
   .enunciado { font-size: 1rem; }
