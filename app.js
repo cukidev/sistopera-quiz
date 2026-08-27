@@ -18,6 +18,7 @@ const INFO_PEPS = {
 const LETRAS = ['a', 'b', 'c', 'd', 'e', 'f'];
 const CLAVE_STATS = 'sistopera_stats_v1';
 const CLAVE_MARCADAS = 'sistopera_marcadas_v1';
+const CLAVE_HISTORIAL = 'sistopera_historial_v1';
 
 /* ---------- Estado ---------- */
 let cfg = { peps: new Set([1]), aleatorio: true, barajarAlt: false, feedback: true,
@@ -78,6 +79,67 @@ function registrar(id, acierto) {
   if (!s[id]) s[id] = { ok: 0, mal: 0 };
   acierto ? s[id].ok++ : s[id].mal++;
   guardarStats(s);
+}
+
+/* ---------- Historial de rondas ---------- */
+function cargarHistorial() {
+  try { return JSON.parse(localStorage.getItem(CLAVE_HISTORIAL)) || []; }
+  catch (e) { return []; }
+}
+function guardarRonda(ronda) {
+  const h = cargarHistorial();
+  h.unshift(ronda);                       // la más reciente primero
+  try { localStorage.setItem(CLAVE_HISTORIAL, JSON.stringify(h.slice(0, 50))); } catch (e) {}
+}
+function fechaCorta(ts) {
+  const d = new Date(ts);
+  const hoy = new Date();
+  const mismoDia = d.toDateString() === hoy.toDateString();
+  const hora = d.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
+  if (mismoDia) return 'Hoy ' + hora;
+  const ayer = new Date(hoy); ayer.setDate(hoy.getDate() - 1);
+  if (d.toDateString() === ayer.toDateString()) return 'Ayer ' + hora;
+  return d.toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit' }) + ' ' + hora;
+}
+function notaDe(p) {
+  const n = p < 0.6 ? 1 + (3 / 0.6) * p : 4 + (3 / 0.4) * (p - 0.6);
+  return Math.round(n * 10) / 10;
+}
+
+function pintarHistorial() {
+  const h = cargarHistorial();
+  const cont = $('#historial-lista');
+  const card = $('#card-historial');
+  if (h.length === 0) { card.classList.add('oculto'); return; }
+  card.classList.remove('oculto');
+
+  const mejor = Math.max(...h.map(r => r.pct));
+  cont.innerHTML = h.slice(0, 12).map((r, i) => {
+    const prev = h[i + 1];
+    let delta = '';
+    if (prev) {
+      const d = r.pct - prev.pct;
+      if (d > 0)      delta = `<span class="delta sube">▲ ${d}</span>`;
+      else if (d < 0) delta = `<span class="delta baja">▼ ${Math.abs(d)}</span>`;
+      else            delta = `<span class="delta igual">=</span>`;
+    }
+    const color = r.pct >= 70 ? 'var(--ok)' : r.pct >= 50 ? 'var(--amarillo)' : 'var(--mal)';
+    const temas = Object.keys(r.porTema || {}).sort().map(t => {
+      const d = r.porTema[t];
+      return `<div class="mini-tema"><span>${escapar(t)}</span><b>${d.ok}/${d.total}</b></div>`;
+    }).join('');
+    return `<details class="ronda">
+        <summary>
+          <span class="ronda-fecha">${fechaCorta(r.fecha)}</span>
+          <span class="ronda-peps">PEP ${r.peps.join('+')}</span>
+          <span class="ronda-pct" style="color:${color}">${r.pct}%</span>
+          <span class="ronda-detalle">${r.ok}/${r.total} · nota ${r.nota.toFixed(1)}</span>
+          ${delta}
+          ${r.pct === mejor ? '<span class="chip-mejor">★ mejor</span>' : ''}
+        </summary>
+        <div class="mini-temas">${temas || '<i>sin desglose</i>'}</div>
+      </details>`;
+  }).join('');
 }
 
 /* ---------- Marcadas para repasar (persistentes) ---------- */
@@ -352,6 +414,36 @@ function terminar() {
   }).join('');
   $('#res-por-tema').innerHTML = filas ? `<h2 style="margin-top:24px">Por tema</h2>${filas}` : '';
 
+  // Guardar la ronda en el historial ANTES de comparar
+  const previas = cargarHistorial();
+  guardarRonda({
+    fecha: Date.now(),
+    peps: [...new Set(preguntas.map(q => q.pep))].sort(),
+    total: contestadas, ok, pct, nota, porTema
+  });
+
+  // Comparación con la ronda anterior
+  const cmp = $('#res-comparacion');
+  if (previas.length) {
+    const ant = previas[0];
+    const d = pct - ant.pct;
+    const mejorPrevio = Math.max(...previas.map(r => r.pct));
+    if (d > 0) {
+      cmp.className = 'comparacion sube';
+      cmp.innerHTML = `▲ <b>${d} puntos</b> mejor que tu ronda anterior (${ant.pct}%)` +
+        (pct > mejorPrevio ? ' · <b>¡tu mejor resultado hasta ahora!</b> 🎉' : '');
+    } else if (d < 0) {
+      cmp.className = 'comparacion baja';
+      cmp.innerHTML = `▼ ${Math.abs(d)} puntos bajo tu ronda anterior (${ant.pct}%). Tu mejor sigue siendo ${mejorPrevio}%.`;
+    } else {
+      cmp.className = 'comparacion igual';
+      cmp.innerHTML = `Igual que tu ronda anterior (${ant.pct}%).`;
+    }
+  } else {
+    cmp.className = 'comparacion igual';
+    cmp.innerHTML = 'Primera ronda registrada. Desde ahora vas a poder comparar tu avance.';
+  }
+
   const hayMalas = preguntas.some((q, i) => respuestas[i] !== null && respuestas[i] !== q.correcta);
   $('#btn-repetir-malas').style.display = hayMalas ? '' : 'none';
 
@@ -393,6 +485,7 @@ function volverInicio() {
   $('#pantalla-inicio').classList.remove('oculto');
   pintarStats();
   pintarConteoMarcadas();
+  pintarHistorial();
   window.scrollTo({ top: 0 });
 }
 
@@ -418,6 +511,12 @@ $('#btn-repasar-marcadas').onclick = () => {
 $('#btn-limpiar-marcadas').onclick = () => {
   if (confirm(`¿Quitar las marcas de ${marcadas.size} pregunta(s)?`)) {
     marcadas.clear(); guardarMarcadas(); pintarConteoMarcadas();
+  }
+};
+$('#btn-borrar-historial').onclick = () => {
+  if (confirm('¿Borrar el historial de rondas? Tus estadísticas por pregunta se mantienen.')) {
+    localStorage.removeItem(CLAVE_HISTORIAL);
+    pintarHistorial();
   }
 };
 $('#btn-reset-stats').onclick = () => {
@@ -447,3 +546,4 @@ marcadas = cargarMarcadas();
 pintarSelectorPeps();
 pintarStats();
 pintarConteoMarcadas();
+pintarHistorial();
